@@ -61,6 +61,43 @@ app.get('/api/courses/subjects/:subject', (req, res) => {
     }
 });
 
+// Route to GET timetable entry with subject, course, and component  -- #3
+app.get('/api/courses/subjects/:subject/:catalog_nbr/:ssr_component', (req, res) => {
+    const ttEntry = [];
+    for(i = 0; i < courseData.length; i++) {
+        if (String(courseData[i].subject).includes(`${req.params.subject}`) 
+            && String(courseData[i].catalog_nbr).includes(`${req.params.catalog_nbr}`)
+            && String(courseData[i].course_info[0].ssr_component).includes(`${req.params.ssr_component}`)) {
+            ttEntry.push(courseData[i]);
+        }
+    }
+    if (ttEntry.length > 0) {
+        res.send(ttEntry);
+    }
+    // 404 subject code doesn't exist
+    else {
+        res.status(404).send('The timetable entry was not found');
+    }
+});
+
+// Route to GET timetable entry with subject and course -- #3
+app.get('/api/courses/subjects/:subject/:catalog_nbr', (req, res) => {
+    const ttEntry = [];
+    for(i = 0; i < courseData.length; i++) {
+        if (String(courseData[i].subject).includes(`${req.params.subject}`)
+            && String(courseData[i].catalog_nbr).includes(`${req.params.catalog_nbr}`)) {
+            ttEntry.push(courseData[i]);
+        }
+    }
+    if (ttEntry.length > 0) {
+        res.send(ttEntry);
+    }
+    // 404 subject code doesn't exist
+    else {
+        res.status(404).send('The timetable entry was not found');
+    }
+});
+
 // PORT
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
