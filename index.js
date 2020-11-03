@@ -11,7 +11,6 @@ function parsingFunction (datafile) {
 }
 
 const courseData = parsingFunction('Lab3-timetable-data.json'); 
-
 // Array of schedule objects
 const scheduleNamesArray = [];
 
