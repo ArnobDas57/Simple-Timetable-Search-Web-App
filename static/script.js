@@ -202,3 +202,94 @@ function getResults() {
         }))
     }
 }
+
+function createSched() {
+    if(String(document.getElementById('name').value.length) > 0 && String(document.getElementById('name').value.length) < 20) {
+        const schedName = {
+            scheduleName: document.getElementById('name').value
+        }
+        document.getElementById('courseAdder').style.display = "block";
+        fetch('/api/courses/schedules', {
+            method: 'POST',
+            headers: {'Content-type': 'application/json'},
+            body: JSON.stringify(schedName)
+        })
+        .then(res => {
+            if (res.ok) {
+                res.json()
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(err => console.log('Schedule could not be created'))
+            }
+            else {
+                console.log('Error: ', res.status);
+            }
+        })
+        .catch()
+    }   
+}
+
+function Plus() {
+    const quantity = document.getElementById("Qinput").value;
+    const table = document.getElementById("mytable");
+    if(quantity > 0) {
+        for(i = 0; i < quantity; i++) {
+            const s = document.createElement('td');
+            i1 = document.createElement('input');
+            i1.setAttribute('id',`tda${i}`);
+            i1.setAttribute('type','text');
+            s.appendChild(i1);
+
+            const c = document.createElement('td');
+            i2 = document.createElement('input');
+            i2.setAttribute('id',`tdb${i}`);
+            i2.setAttribute('type','text');
+            c.appendChild(i2);
+
+            const r = document.createElement('tr');
+            r.appendChild(s);
+            r.appendChild(c);
+            table.appendChild(r);
+        }
+    }
+}
+
+function Addcourse() {
+    const subjectAndCourse = [];
+    
+    for(i = 0; i < document.getElementById("Qinput").value; i++) {
+        if((document.getElementById(`tda${i}`).value.length > 0 && document.getElementById(`tda${i}`).value.length < 10) 
+        && (document.getElementById(`tdb${i}`).value.length > 0 && document.getElementById(`tdb${i}`).value.length < 8)
+        && (document.getElementById('name').value.length > 0 && document.getElementById('name').value.length < 20)
+        && (document.getElementById('Qinput').value > 0 && document.getElementById('Qinput').value < 10)) {
+            subjectAndCourse[i] = {subject: document.getElementById(`tda${i}`).value, catalog_nbr: document.getElementById(`tdb${i}`).value}
+    }
+
+    fetch(`/api/courses/schedules/${document.getElementById('name').value}`, {
+      method: 'PUT',
+      headers: {'Content-type': 'application/json'},
+      body: JSON.stringify(subjectAndCourse)
+        })
+        .then(res => {
+            if (res.ok) {
+                res.json()
+                .then(data => {
+                    console.log(data);
+                })
+                .catch(err => console.log('Courses could not be Added'))
+            }
+            else {
+                console.log('Error: ', res.status);
+            }
+        })
+        .catch()
+    } 
+    document.getElementById('name').value = "";
+    document.getElementById('Qinput').value = "";
+
+    for(i = 0; i < document.getElementById("Qinput").value; i++) {
+        document.getElementById(`tda${i}`).value = "";
+        document.getElementById(`tdb${i}`).value = "";
+    }
+}  
