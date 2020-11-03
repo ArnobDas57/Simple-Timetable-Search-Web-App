@@ -293,3 +293,74 @@ function Addcourse() {
         document.getElementById(`tdb${i}`).value = "";
     }
 }  
+
+function getSched() {
+    const l = document.getElementById('schedDisplay');
+    while (l.firstChild) {
+        l.removeChild(l.firstChild);
+    }
+    if(document.getElementById('schedName').value.length > 0 && document.getElementById('schedName').value.length < 20) {
+        const title = document.createTextNode(`Schedule Name : ${String(document.getElementById('schedName').value)}`);
+        const ulSpan = document.createElement('span');
+        ulSpan.id = "nameofS";  
+        ulSpan.appendChild(title); 
+        l.appendChild(ulSpan);
+
+        fetch(`/api/courses/schedules/${(document.getElementById('schedName').value)}`)
+        .then(res => res.json()
+        .then(data => {
+            data.forEach(e => {
+                const item = document.createElement('li');
+                const ca = [];
+                const cb = [];
+                const table = document.createElement('table');
+                const r1 = document.createElement('tr');
+                const r2 = document.createElement('tr');
+               
+                for(i = 1; i < 10; i++) {
+                    ca[i] = document.createElement('td');
+                    cb[i] = document.createElement('td');
+                }
+
+                ca[1].appendChild(document.createTextNode("Section"));
+                cb[1].appendChild(document.createTextNode(`${String(e.course_info[0].class_section)}`));
+                ca[2].appendChild(document.createTextNode("Component"));
+                cb[2].style.backgroundColor = colorIndicator(`${e.course_info[0].ssr_component}`);
+                cb[2].appendChild(document.createTextNode(`${String(e.course_info[0].ssr_component)}`));
+                ca[3].appendChild(document.createTextNode("Class Number"));
+                cb[3].appendChild(document.createTextNode(`${String(e.course_info[0].class_nbr)}`)); 
+                ca[4].appendChild(document.createTextNode("Days"));
+                cb[4].appendChild(document.createTextNode(`${String(e.course_info[0].days)}`));
+                ca[5].appendChild(document.createTextNode("Start Time"));              
+                cb[5].appendChild(document.createTextNode(`${String(e.course_info[0].start_time)}`));  
+                ca[6].appendChild(document.createTextNode("End Time"));
+                cb[6].appendChild(document.createTextNode(`${String(e.course_info[0].end_time)}`));
+                ca[7].appendChild(document.createTextNode("Campus"));
+                cb[7].appendChild(document.createTextNode(`${String(e.course_info[0].campus)}`));
+                ca[8].appendChild(document.createTextNode("Instructor"));
+                cb[8].appendChild(document.createTextNode(`${String(e.course_info[0].instructors)}`));
+                ca[9].appendChild(document.createTextNode("Status"));
+                cb[9].appendChild(document.createTextNode(`${String(e.course_info[0].enrl_stat)}`));
+
+                for(i = 1; i < 10; i++) {
+                    r1.appendChild(ca[i]);
+                    r2.appendChild(cb[i]);
+                }
+
+                table.appendChild(r1);
+                table.appendChild(r2);
+                const br = document.createElement("br");
+                const text = document.createTextNode(`${String(e.subject)} ${String(e.catalog_nbr)} - ${String(e.className)}`);
+                const description = document.createTextNode(`${String(e.description)}`);  
+                const span = document.createElement('span');
+                span.id = "desc";  
+                span.appendChild(description);           
+                item.appendChild(text);
+                item.appendChild(br);
+                item.appendChild(span);
+                item.appendChild(table);
+                l.appendChild(item);
+            });
+        }))
+    }
+}
