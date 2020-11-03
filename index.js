@@ -152,15 +152,20 @@ app.get('/api/courses/schedules/:name', (req, res) => {
     }
 });
 
-
-
-
-
-
-
-
-
-
+// Route to DELETE a schedule with a given name -- #7
+app.delete('/api/courses/schedules/:name', (req, res) => {
+    const name = req.params.name;
+    const schedName = scheduleNamesArray.find(p => p.scheduleName === name);
+    if(!schedName)
+    {
+        res.status(404).send('Schedule name does not exist');
+    }
+    else{
+        const index = scheduleNamesArray.indexOf(schedName);
+        scheduleNamesArray.splice(index, 1)
+        res.send(scheduleNamesArray);
+    }
+});
 
 
 
