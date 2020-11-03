@@ -17,6 +17,8 @@
   },
   "homepage": "https://github.com/ArnobDas57/se3316-adas46-lab3#readme",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "joi": "^13.1.0",
+    "lowdb": "^1.0.0"
   }
 }
