@@ -179,6 +179,12 @@ app.get('/api/courses/schedules', (req, res) => {
     res.send(NamesOfSchedules);
 });
 
+// Route to DELETE all schedules -- #9
+app.delete('/api/courses/schedules', (req, res) => {
+    scheduleNamesArray.splice(0, scheduleNamesArray.length);
+    res.send(scheduleNamesArray);
+});
+
 // PORT
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
