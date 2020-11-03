@@ -98,6 +98,37 @@ app.get('/api/courses/subjects/:subject/:catalog_nbr', (req, res) => {
     }
 });
 
+// Route to create new schedule with given schedule name using POST -- #4
+app.post('/api/courses/schedules', (req, res) => {
+    const NewName = req.body.scheduleName;
+    const schedName = scheduleNamesArray.find(p => p.scheduleName === NewName);
+    if(schedName) {
+    res.status(400).send('Schedule name already exists');
+    }
+    else if(!schedName && String(NewName).length < 20) {
+    scheduleNamesArray.push({
+        "scheduleName": String(NewName),
+        "codePairsList": []
+    });
+    res.send(scheduleNamesArray);
+    }
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // PORT
 app.listen(port, () => {
     console.log(`Listening on port ${port}`);
