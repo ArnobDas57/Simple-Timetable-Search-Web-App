@@ -12,6 +12,9 @@ function parsingFunction (datafile) {
 
 const courseData = parsingFunction('Lab3-timetable-data.json'); 
 
+// Array of schedule objects
+const scheduleNamesArray = [];
+
 // Setup serving front-end code
 app.use('/', express.static('static'));
 
@@ -114,7 +117,40 @@ app.post('/api/courses/schedules', (req, res) => {
     }
 });
 
+// Route to save a list of subject code, course code pairs under schedule name -- #5
+app.put('/api/courses/schedules/:name', (req, res) => {
+    const name = req.params.name;
+    const schedName = scheduleNamesArray.find(p => p.scheduleName === name);
+    if(!schedName) {
+        res.status(404).send('Schedule name does not exist');
+    }
+    else if(schedName && String(name).length < 20) {
+        schedName.codePairsList = req.body;
+        for(i = 0; i < schedName.codePairsList.length; i++){
+            for(j = 0; j < courseData.length; j++){
+                if (String(courseData[j].subject).includes(`${schedName.codePairsList[i].subject}`)
+                && String(courseData[j].catalog_nbr).includes(`${schedName.codePairsList[i].catalog_nbr}`)) {
+                    schedName.codePairsList[i].className = courseData[j].className;
+                    schedName.codePairsList[i].course_info = courseData[j].course_info;
+                    schedName.codePairsList[i].description = courseData[j].catalog_description;
+                }
+            }
+        }
+        res.send(schedName);
+    }
+});
 
+// Route to GET list of subject code, course code pairs for given schedule -- #6
+app.get('/api/courses/schedules/:name', (req, res) => {
+    const name = req.params.name;
+    const schedName = scheduleNamesArray.find(p => p.scheduleName === name);
+    if(!schedName) {
+        res.status(404).send('Schedule name does not exist');
+    }
+    else if(schedName && String(name).length < 20) {
+        res.send(schedName.codePairsList);
+    }
+});
 
 
 
