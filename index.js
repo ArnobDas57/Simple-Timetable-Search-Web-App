@@ -167,8 +167,17 @@ app.delete('/api/courses/schedules/:name', (req, res) => {
     }
 });
 
-
-
+// Route to GET a list of schedule names with the number of courses that are saved -- #8
+app.get('/api/courses/schedules', (req, res) => {
+    const NamesOfSchedules = [];
+    for (i = 0; i < scheduleNamesArray.length; i++) {
+        NamesOfSchedules.push({
+            "scheduleName": scheduleNamesArray[i].scheduleName,
+            "numberOfCourses": scheduleNamesArray[i].codePairsList.length
+        });
+    }
+    res.send(NamesOfSchedules);
+});
 
 // PORT
 app.listen(port, () => {
